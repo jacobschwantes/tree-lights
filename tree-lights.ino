@@ -7,11 +7,7 @@
 #define SNAKE_SIZE 5
 CRGB leds[NUM_LEDS];
 
-// TODO:
-// - Attempt to make animations composable.
-// - See if we can use buttons to turn on/off and cycle animations. (final product: on/off button, button to cycle animations (demo mode (my custom routine), or cycle animations / colors), dials for speed and brightness?, usb port, dc power port, lights dongle out, screen (to display brightness, x/y preset cycle progress indicator, big text in middle saying mode/preset), 3d printed chasis,)
-// - Document functions so I know what the animations does.
-// - Introduce some kind of randomness component where which light shows play is random or based on some kind of condition.
+// notes for v2 2024: on/off button, button to cycle animations (demo mode, cycle animations / colors, dials for speed and brightness, usb port in, dc power in (for microcontroller & led 5v), led female connector out, screen (to display brightness, x/y preset cycle progress indicator, big text in middle saying mode/preset), 3d printed chasis
 
 void setup()
 {
@@ -23,12 +19,8 @@ void setup()
 
 void loop()
 {
-  race();
-  fadespiral();
+  fadeSpiral();
   growRainbow();
-  snakes();
-  snake();
-  // snake2();
   cyclone();
   cycle();
 }
@@ -49,7 +41,7 @@ void light()
   }
 }
 
-void fadeall()
+void fadeAll()
 {
   for (byte i = 0; i < NUM_LEDS; i++)
   {
@@ -67,7 +59,7 @@ void cycle()
     }
     FastLED.delay(SPEED);
   }
-  fadeall();
+  fadeAll();
 }
 
 void race()
@@ -83,7 +75,7 @@ void race()
         FastLED.delay(SPEED);
         leds[j] = CHSV(hue, 255, 255);
 
-        fadeall();
+        fadeAll();
       }
     }
     else
@@ -93,7 +85,7 @@ void race()
         FastLED.delay(SPEED);
         leds[j] = CHSV(hue, 255, 255);
 
-        fadeall();
+        fadeAll();
       }
     }
     FastLED.delay(DELAY);
@@ -111,7 +103,7 @@ void cyclone()
       leds[j] = CHSV(hue, 255, 255);
       if (i != 10)
       {
-        fadeall();
+        fadeAll();
       }
     }
   }
@@ -127,7 +119,7 @@ void growRainbow()
     leds[24 - j] = CHSV(hue, 255, 255);
     leds[24 + j] = CHSV(hue, 255, 255);
 
-    fadeall();
+    fadeAll();
     FastLED.delay(SPEED);
   };
   FastLED.delay(DELAY);
@@ -283,7 +275,7 @@ void snakes()
   FastLED.delay(DELAY);
 };
 
-void fadespiral()
+void fadeSpiral()
 {
   for (byte i = 1; i < NUM_LEDS; i++)
   {
@@ -291,7 +283,7 @@ void fadespiral()
     FastLED.delay(SPEED);
     leds[i] = CHSV(hue, 255, 255);
 
-    fadeall();
+    fadeAll();
   }
   FastLED.delay(DELAY);
   for (byte i = NUM_LEDS; i > 1; i--)
@@ -300,32 +292,7 @@ void fadespiral()
     FastLED.delay(SPEED);
     leds[i] = CHSV(hue, 255, 255);
 
-    fadeall();
+    fadeAll();
   }
   FastLED.delay(DELAY);
-}
-
-// Color Wave Animation
-void colorWave()
-{
-  static byte wavePosition = 0; // Position of the wave
-
-  for (byte i = 0; i < NUM_LEDS; i++)
-  {
-    // Calculate the hue based on the position in the wave
-    byte hue = (wavePosition + i) % 255;
-
-    // Set the color of the LED
-    leds[i] = CHSV(hue, 255, 255);
-  }
-
-  // Move the wave position
-  wavePosition++;
-  if (wavePosition >= 255)
-  {
-    wavePosition = 0;
-  }
-
-  // Update the LEDs
-  FastLED.delay(SPEED);
 }
